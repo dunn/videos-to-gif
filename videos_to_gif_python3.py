@@ -36,7 +36,7 @@ def makeGif(video, start, end, string, output):
 
   text = striptags(string).split("\n")
 
-  subprocess.call(['avconv', '-i', video, '-vf', 'scale=w=400:h=-1', '-r', '15', '-ss', start, '-t', end, os.path.join(directory, 'image-%05d.png')])
+  subprocess.call(['ffmpeg', '-i', video, '-vf', 'scale=w=400:h=-1', '-r', '15', '-ss', start, '-t', end, os.path.join(directory, 'image-%05d.png')])
 
   file_names = sorted((fn for fn in os.listdir(directory)))
 
@@ -65,7 +65,7 @@ def makeGif(video, start, end, string, output):
 
   subprocess.call(["convert", '-loop', '0', os.path.join(directory, '*.png'), output])
   shutil.rmtree(directory)
-  
+
 
 def generateGifs(video_file_path, sub_file_path):
   outpath = "gifs"
@@ -79,7 +79,7 @@ def generateGifs(video_file_path, sub_file_path):
     end = str(sub.end - sub.start).replace(',', '.')
 
     gif_filename = os.path.join(outpath, f'{i:06}-{slugify(striptags(sub.text))}.gif')
-    
+
     if os.path.isfile(gif_filename):
       next
     else:
