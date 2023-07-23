@@ -3,13 +3,13 @@ Videos to Gif
 
 ### What does it do?
 
-Given any number of video files and matching subtitle files it will generate gifs for every single line of dialogue
+Given any number of video files and matching subtitle files it will generate
+gifs for every single (complete) line of dialogue.
 
 ### How do I use it?
 
 install pre-reqs on your machine:
 * ffmpeg
-* imagemagick or graphicsmagick
 
 install requirements:
 
