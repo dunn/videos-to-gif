@@ -5,6 +5,11 @@
 import os, sys, re, subprocess, pysrt, itertools, json
 from slugify import slugify
 
+fps = 15
+width = 800
+fontsize = 36
+outline = 5
+
 skip_patterns = [
   r".*\.\.\.$",
   r".*\,$",
@@ -29,17 +34,20 @@ def makeGif(video, subtitle, start, length, output):
   if not os.path.exists(gif_dir):
     os.makedirs(gif_dir)
 
-  subprocess.call([
+  args = [
     'ffmpeg',
     '-v', 'error',
     '-copyts',
     '-i', video,
-    '-lavfi', f'fps=15,scale=800:-1,subtitles=\'{subtitle}\':force_style=\'fontsize=36,bold=-1,outline=5\'',
+    '-lavfi', f"fps={15},scale={width}:-1,subtitles='{subtitle}':force_style=\'fontsize={fontsize},bold=-1,outline={outline}'",
     '-ss', start,
     '-t', length,
     output,
     '-y', # y is for yolo
-  ])
+  ]
+
+  print(' '.join(args))
+  subprocess.call(args)
 
 
 def generateGifs(video_file_path, sub_file_path):
