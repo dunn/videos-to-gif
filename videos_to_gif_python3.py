@@ -2,13 +2,19 @@
 # expects to be run as:
 # $ python3 videos_to_gif_python3.py video.mp4 subtitles.srt
 
-import os, sys, re, subprocess, shutil, pysrt, itertools
+import os, sys, re, subprocess, pysrt, itertools, json
 from slugify import slugify
 
 skip_patterns = [
   r".*\.\.\.$",
+  r".*\,$",
+  r".*[a-z]$",
   r"^[a-z].*",
 ]
+
+no_skips = lambda y: len(list(itertools.filterfalse(
+  lambda x: re.search(x, y.text), skip_patterns
+))) == len(skip_patterns)
 
 gif_dir = "gifs"
 
@@ -40,21 +46,24 @@ def generateGifs(video_file_path, sub_file_path):
   outpath = "gifs"
 
   subs = pysrt.open(sub_file_path, encoding="utf-8")
+  filtered_subs = list(filter(no_skips, subs))
+
+  metadata = []
 
   # generate a gif for every line of dialogue
-  for i, sub in enumerate(subs):
+  for i, sub in enumerate(filtered_subs):
     # 00:00:00,000 => 00:00:00.000
     start = str(sub.start).replace(',', '.')
     length = str(sub.end - sub.start).replace(',', '.')
 
     gif_filename = os.path.join(outpath, f'{i:06}-{slugify(striptags(sub.text))}.gif')
+    metadata.append(json.dumps({ 'text': sub.text, 'path': gif_filename }))
 
-    # this is stupid
-    if len(list(itertools.filterfalse(lambda x: re.search(x, sub.text), skip_patterns))) != len(skip_patterns):
-      next
-    else:
-      print("generating " + gif_filename + "...")
-      makeGif(video_file_path, sub_file_path, start, length, gif_filename)
+    print(f"Generating {gif_filename}")
+    makeGif(video_file_path, sub_file_path, start, length, gif_filename)
+    with open(os.path.join(outpath, "metadata.json"), "w") as f:
+      f.write(f"[{(',').join(metadata)}]")
+
 
 if __name__ == '__main__':
   generateGifs(sys.argv[1], sys.argv[2])
