@@ -12,4 +12,4 @@ COPY toot.py ./
 COPY metadata.json ./
 COPY gifs ./gifs/
 
-CMD ["python", "toot.py"]
+CMD ["python3", "toot.py"]
