@@ -39,4 +39,5 @@ attachment = mastodon.media_post(
 mastodon.status_post(
     selection['text'],
     media_ids = [attachment['id']],
+    visibility = 'public',
 )
