@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gif-tooter
+  namespace: bots
+spec:
+  schedule: "3 */3 * * *"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: toot-time
+            image: grumble/gif-tooter:1
+            imagePullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: toot-credentials
+          restartPolicy: Never

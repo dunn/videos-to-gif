@@ -1,5 +1,6 @@
-files.yml
+*.csv
 *.gif
+metadata.json
 *.pyc
 screenshots
-*.csv
+*.secret
