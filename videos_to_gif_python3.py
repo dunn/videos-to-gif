@@ -19,24 +19,12 @@ def makeGif(video, subtitle, start, length, output):
   if not os.path.exists(gif_dir):
     os.makedirs(gif_dir)
 
-  palette = f'{gif_dir}/palette-tmp.png'
-
-  subprocess.call([
-    'ffmpeg',
-    '-v', 'warning',
-    '-i', video,
-    '-vf', f'{filters},palettegen=stats_mode=diff',
-    palette,
-    '-y',
-  ])
-
   subprocess.call([
     'ffmpeg',
     '-v', 'warning',
     '-copyts',
     '-i', video,
-    '-i', palette,
-    '-lavfi', f'{filters} [x]; [x][1:v] paletteuse=dither=floyd_steinberg,subtitles={subtitle}:force_style=\'fontsize=36,bold=-1,outline=5\'',
+    '-lavfi', f'fps=15,scale=800:-1,subtitles=\'{subtitle}\':force_style=\'fontsize=36,bold=-1,outline=5\'',
     '-ss', start,
     '-t', length,
     output,
