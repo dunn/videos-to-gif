@@ -60,15 +60,26 @@ def generateGifs(video_file_path, sub_file_path):
 
   # generate a gif for every line of dialogue
   for i, sub in enumerate(filtered_subs):
-    # 00:00:00,000 => 00:00:00.000
-    start = str(sub.start).replace(',', '.')
-    length = str(sub.end - sub.start).replace(',', '.')
+    # we're rounding the milliseconds to the nearest frame to avoid descyncs
+    # with the subtitles
+    frame_chunk = 1000 / fps
+
+    start = sub.start
+    start_ms = start.milliseconds
+    start.milliseconds = start_ms + (frame_chunk - (start_ms % frame_chunk))
+
+    end = sub.end
+    end_ms = end.milliseconds
+    end.milliseconds = end_ms - (end_ms % frame_chunk)
+
+    start_str = str(start).replace(',', '.')
+    length_str = str(end - start).replace(',', '.')
+
 
     gif_filename = os.path.join(outpath, f'{i:06}-{slugify(striptags(sub.text))}.gif')
     metadata.append(json.dumps({ 'text': sub.text, 'path': gif_filename }))
 
-    print(f"Generating {gif_filename}")
-    makeGif(video_file_path, sub_file_path, start, length, gif_filename)
+    makeGif(video_file_path, sub_file_path, start_str, length_str, gif_filename)
     with open(os.path.join(outpath, "metadata.json"), "w") as f:
       f.write(f"[{(',').join(metadata)}]")
 
