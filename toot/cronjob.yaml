@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: toot-time
-            image: grumble/gif-tooter:1
+            image: grumble/gif-tooter:4
             imagePullPolicy: IfNotPresent
             envFrom:
               - secretRef:
