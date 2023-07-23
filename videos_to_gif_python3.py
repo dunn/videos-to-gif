@@ -2,11 +2,15 @@
 # expects to be run as:
 # $ python3 videos_to_gif_python3.py video.mp4 subtitles.srt
 
-import os, sys, re, subprocess, shutil, pysrt
+import os, sys, re, subprocess, shutil, pysrt, itertools
 from slugify import slugify
 
+skip_patterns = [
+  r".*\.\.\.$",
+  r"^[a-z].*",
+]
+
 gif_dir = "gifs"
-filters = "fps=15,scale=600:-1:flags=lanczos"
 
 def striptags(data):
   # I'm a bad person, don't ever do this.
@@ -45,8 +49,12 @@ def generateGifs(video_file_path, sub_file_path):
 
     gif_filename = os.path.join(outpath, f'{i:06}-{slugify(striptags(sub.text))}.gif')
 
-    print("generating " + gif_filename + "...")
-    makeGif(video_file_path, sub_file_path, start, length, gif_filename)
+    # this is stupid
+    if len(list(itertools.filterfalse(lambda x: re.search(x, sub.text), skip_patterns))) != len(skip_patterns):
+      next
+    else:
+      print("generating " + gif_filename + "...")
+      makeGif(video_file_path, sub_file_path, start, length, gif_filename)
 
 if __name__ == '__main__':
   generateGifs(sys.argv[1], sys.argv[2])
