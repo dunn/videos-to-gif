@@ -39,7 +39,7 @@ def makeGif(video, subtitle, start, length, output):
     '-v', 'error',
     '-copyts',
     '-i', video,
-    '-lavfi', f"fps={15},scale={width}:-1,subtitles='{subtitle}':force_style=\'fontsize={fontsize},bold=-1,outline={outline}'",
+    '-lavfi', f"fps={fps},scale={width}:-1,subtitles='{subtitle}':force_style=\'fontsize={fontsize},bold=-1,outline={outline}'",
     '-ss', start,
     '-t', length,
     output,
