@@ -25,7 +25,7 @@ def makeGif(video, subtitle, start, length, output):
 
   subprocess.call([
     'ffmpeg',
-    '-v', 'warning',
+    '-v', 'error',
     '-copyts',
     '-i', video,
     '-lavfi', f'fps=15,scale=800:-1,subtitles=\'{subtitle}\':force_style=\'fontsize=36,bold=-1,outline=5\'',
