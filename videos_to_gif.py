@@ -20,16 +20,17 @@ skip_patterns = [
 ]
 
 no_skips = lambda y: len(list(itertools.filterfalse(
-  lambda x: re.search(x, y.text), skip_patterns
+  lambda x: re.search(x, striptags(y.text)), skip_patterns
 ))) == len(skip_patterns)
 
 gif_dir = "gifs"
 
-def striptags(data):
+def striptags(text):
   # I'm a bad person, don't ever do this.
   # Only okay, because of how basic the tags are.
-  p = re.compile(r'<.*?>')
-  return p.sub('', data)
+  brackets = re.compile(r'<.*?>')
+  braces = re.compile(r'{.*?}')
+  return braces.sub('', brackets.sub('', text))
 
 
 def makeGif(video, subtitle, start, length, output):
