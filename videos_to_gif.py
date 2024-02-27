@@ -7,14 +7,16 @@ from slugify import slugify
 
 fps = 15
 width = 800
-fontsize = 36
-outline = 5
+fontsize = 28
+outline = 3
 
 skip_patterns = [
-  r".*\.\.\.$",
-  r".*\,$",
   r".*[a-z]$",
+  r".*\,$",
+  r".*\:$",
+  # r".*\.\.\.$",
   r"^[a-z].*",
+  r"^\.\.\.",
 ]
 
 no_skips = lambda y: len(list(itertools.filterfalse(
